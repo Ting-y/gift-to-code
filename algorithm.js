@@ -1,7 +1,7 @@
 const articles = {
 	suicide:{
 		url: "https://kidshelpphone.ca/get-info/how-cope-thoughts-suicide/",
-		keyphrases:["suicide", "kill myself"]
+		keyphrases:["suicid", "kill myself"]
 	},
 	anorexia:{
 		url: "https://kidshelpphone.ca/get-info/eating-disorders-tips-recovery/",
@@ -13,7 +13,11 @@ const articles = {
 	},
 	bullying:{
 		url: "https://kidshelpphone.ca/get-info/what-do-if-youre-experiencing-bullying/",
-		keyphrases:["bully"]
+		keyphrases:["bully", "bulli"]
+	},
+	loneliness:{
+		url: "https://kidshelpphone.ca/get-info/feeling-lonely-here-are-some-ways-feel-better/",
+		keyphrases:["lonel", "alone"]
 	}
 }
 
