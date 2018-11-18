@@ -13,7 +13,7 @@ const articles = {
 	},
 	bullying:{
 		url: "https://kidshelpphone.ca/get-info/what-do-if-youre-experiencing-bullying/",
-		keyphrases:["bully"]
+		keyphrases:["bully", "bullied"]
 	}
 }
 

@@ -98,15 +98,29 @@ function handleMessage(sender_psid, received_message) {
       response = {
         "text": "My name is Electra, and I’m a chatbot. I’ll help you out until a councillor is available to chat with you! \n What's on your mind today?"
       }
+
+        // Send the response message
+      callSendAPI(sender_psid, response)
+      .then((result) => {
+        delay(3000)
+      })
     } else {
       const articleURL = algorithm.getMostRelevantArticle(inputText)
       console.log(articleURL)
       // Create the payload for a basic text message, which
       // will be added to the body of our request to the Send API
       response = {
-        "text": `You may want to check this out ${articleURL}`
+        "text": `Sounds like there is a lot on your mind. We are happy to help, you are currently 5th in the Queue. While you wait, would you like to look through this link? ${articleURL}`
       }
       console.log(response)
+              // Send the response message
+      callSendAPI(sender_psid, response)
+      .then((result) => {
+        return delay(3000)
+      })
+      .then((result) => {
+        return callSendAPI("2177375635658158", qustionYesOrNo)
+      })
     }
 
   } else if (received_message.attachments) {
@@ -138,38 +152,38 @@ function handleMessage(sender_psid, received_message) {
       }
     }
   } 
-  
-  // Send the response message
-  callSendAPI(sender_psid, response);    
+
 }
+
 
 function handlePostback(sender_psid, received_postback) {
   console.log('ok')
    let response;
   // Get the payload for the postback
   let payload = received_postback.payload;
-
+  const moreText = "Excellent! Glad to hear that! You are currently 3rd in the Queue and we are doing everything we can to talk to you as soon as possible. While you're waiting, would you like to play this game? https://kidshelpphone.ca/get-info/tension-release-exercise/"
   // Set the response based on the postback payload
   if (payload === 'yes') {
-    response = { "text": "Thanks!" }
+    response = { "text": moreText }
   } else if (payload === 'no') {
-    response = { "text": "Oops, try sending another image." }
+    response = { "text": "Sorry to heard that, You are currently 3rd in the Queue and we are doing everything we can to talk to you as soon as possible. While you're waiting, would you like to play https://kidshelpphone.ca/get-info/bullying-incident-report/" }
   }
   // Send the message to acknowledge the postback
-  callSendAPI(sender_psid, response);
+  callSendAPI(sender_psid, response)
+
 }
 
-function callSendAPI(sender_psid, response) {
+async function callSendAPI(sender_psid, response) {
   // Construct the message body
   let request_body = {
     "recipient": {
-      "id": sender_psid
+      "id": "2177375635658158"
     },
     "message": response
   }
 
   // Send the HTTP request to the Messenger Platform
-  request({
+  return request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
     "qs": { "access_token": PAGE_ACCESS_TOKEN },
     "method": "POST",
@@ -179,9 +193,39 @@ function callSendAPI(sender_psid, response) {
       console.log(body)
       console.log('message sent!')
     } else {
-      console.error("Unable to send message:" + err);
+      console.error("Unable to send message:" + err)
     }
-  }); 
+  })
 }
 
 
+let delay = (time) => (result) => new Promise(resolve => setTimeout(() => resolve(result), time));
+
+const qustionYesOrNo = {
+  "attachment": {
+    "type": "template",
+    "payload": {
+      "template_type": "generic",
+      "elements": [{
+        "title": "Did this article resonate  with you?",
+        "subtitle": "Tap a button to answer.",
+        "buttons": [
+          {
+            "type": "postback",
+            "title": "Yes!",
+            "payload": "yes",
+          },
+          {
+            "type": "postback",
+            "title": "No!",
+            "payload": "no",
+          }
+        ],
+      }]
+    }
+  }
+}
+
+const morelink = {
+
+}
