@@ -13,17 +13,25 @@ const articles = {
 		url:new URL("https://kidshelpphone.ca/get-info/how-cope-thoughts-suicide/"),
 		keyphrases:["suicide", "kill myself"]
 	},
+	familyabuse:{
+		url:new URL("https://kidshelpphone.ca/get-info/dealing-family-abuse-how-get-help-and-stay-safe/"),
+		keyphrases:["parents abus", "dad abus", "mom abus", "parents hit", "dad hit", "mom hit", "parents beat", "dad beat", "mom beat"]
+	},
 	anorexia:{
 		url:new URL("https://kidshelpphone.ca/get-info/eating-disorders-tips-recovery/"),
 		keyphrases:["anorexi", "bulimi", "eating disorder"]
+	},
+	bullying:{
+		url:new URL("https://kidshelpphone.ca/get-info/what-do-if-youre-experiencing-bullying/"),
+		keyphrases:["bully", "teas", "making fun of", "make fun of"]
 	},
 	comingout:{
 		url:new URL("https://kidshelpphone.ca/get-info/identifying-lgbtq-and-coming-out/"),
 		keyphrases:["come out", "coming out"]
 	},
-	bullying:{
-		url:new URL("https://kidshelpphone.ca/get-info/what-do-if-youre-experiencing-bullying/"),
-		keyphrases:["bully"]
+	loneliness:{
+		url:new URL("https://kidshelpphone.ca/get-info/feeling-lonely-here-are-some-ways-feel-better/"),
+		keyphrases:["lonel", "alone"]
 	}
 }
 
@@ -54,7 +62,7 @@ server.listen(port, (err) => {
     }
 
     console.log(`server is listening on ${port}`)
-    var input = "Im going to kill myself. . and i just want to know one thing, do you think that there are just some people who are just to far gone to be saved? be honest. ANOREXIA"
+    var input = "Im going to kill myself. . and i just want to know one thing, do you think that there are just some people who are just to far gone to be saved? be honest. ANOREXIA. I feel so lonely, very very alone"
 	var result = getMostRelevantArticle(input)
     console.log(result)
 
