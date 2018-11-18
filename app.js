@@ -115,6 +115,7 @@ function handleMessage(sender_psid, received_message) {
           Text: inputText /* required */
       };
       comprehend.detectKeyPhrases(params, function (err, data) {
+        //var args = process.argv.slice(2);
           if (err) console.log(err, err.stack); // an error occurred
           else  {
               if (!data) return;
