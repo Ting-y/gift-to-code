@@ -81,6 +81,9 @@ app.get('/webhook', (req, res) => {
   }
 });
 
+function isFirstTimeChatting(text) {
+  return (text.toLowerCase() === "get started")
+}
 function handleMessage(sender_psid, received_message) {
   let response;
   
@@ -88,14 +91,24 @@ function handleMessage(sender_psid, received_message) {
   if (received_message.text) {
     var inputText = received_message.text;
     console.log(received_message.text)
-    const articleURL = algorithm.getMostRelevantArticle(inputText)
-    console.log(articleURL)
-    // Create the payload for a basic text message, which
-    // will be added to the body of our request to the Send API
-    response = {
-      "text": `You may want to check this out ${articleURL}`
+
+
+    // check the start keyword and ask 1 first question 
+    if (isFirstTimeChatting(inputText)) {
+      response = {
+        "text": "My name is Electra, and I’m a chatbot. I’ll help you out until a councillor is available to chat with you! \n What's on your mind today?"
+      }
+    } else {
+      const articleURL = algorithm.getMostRelevantArticle(inputText)
+      console.log(articleURL)
+      // Create the payload for a basic text message, which
+      // will be added to the body of our request to the Send API
+      response = {
+        "text": `You may want to check this out ${articleURL}`
+      }
+      console.log(response)
     }
-    console.log(response)
+
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
