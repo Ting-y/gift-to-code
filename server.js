@@ -23,7 +23,7 @@ const articles = {
 	},
 	bullying:{
 		url:new URL("https://kidshelpphone.ca/get-info/what-do-if-youre-experiencing-bullying/"),
-		keyphrases:["bully", "teas", "making fun of", "make fun of"]
+		keyphrases:["bully", "bulli", "teas", "making fun of", "make fun of"]
 	},
 	comingout:{
 		url:new URL("https://kidshelpphone.ca/get-info/identifying-lgbtq-and-coming-out/"),
