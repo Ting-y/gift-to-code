@@ -26,6 +26,7 @@ const PAGE_ACCESS_TOKEN = "process.env.PAGE_ACCESS_TOKEN";
 const 
   request = require('request'),
   express = require('express'),
+  AWS = require('aws-sdk'),
   body_parser = require('body-parser'),
   app = express().use(body_parser.json()); // creates express http server
 
@@ -104,7 +105,25 @@ function handleMessage(sender_psid, received_message) {
   let response;
   
   // Checks if the message contains text
-  if (received_message.text) {    
+  if (received_message.text) {
+    var inputText = received_message.text;
+
+    // TODO: if text contains 'suicide' / 'kill myself' respond with crisis hotline number
+      var comprehend = new AWS.Comprehend();
+      var params = {
+          LanguageCode: en | fr , /* required */
+          Text: inputText /* required */
+      };
+      comprehend.detectKeyPhrases(params, function (err, data) {
+        //var args = process.argv.slice(2);
+          if (err) console.log(err, err.stack); // an error occurred
+          else  {
+              if (!data) return;
+              data.KeyPhrases[0].Text;
+              data.KeyPhrases[0].Score;
+              console.log(data);           // successful response
+          }
+      });
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     response = {
