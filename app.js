@@ -1,37 +1,19 @@
 
-/**
- * Copyright 2017-present, Facebook, Inc. All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * Messenger Platform Quick Start Tutorial
- *
- * This is the completed code for the Messenger Platform quick start tutorial
- *
- * https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start/
- *
- * To run this code, you must do the following:
- *
- * 1. Deploy this code to a server running Node.js
- * 2. Run `npm install`
- * 3. Update the VERIFY_TOKEN
- * 4. Add your PAGE_ACCESS_TOKEN to your environment vars
- *
- */
 
 'use strict';
-const PAGE_ACCESS_TOKEN = "process.env.PAGE_ACCESS_TOKEN";
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // Imports dependencies and set up http server
 const 
   request = require('request'),
   express = require('express'),
-  AWS = require('aws-sdk'),
   body_parser = require('body-parser'),
   app = express().use(body_parser.json()); // creates express http server
 
+
+
+const algorithm = require("./algorithm.js") 
 // Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+app.listen(process.env.PORT || 3000, () => console.log('webhook is listening'));
 
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
@@ -41,7 +23,7 @@ app.post('/webhook', (req, res) => {
 
   // Check the webhook event is from a Page subscription
   if (body.object === 'page') {
-
+    console.log(body.entry)
     body.entry.forEach(function(entry) {
 
       // Gets the body of the webhook event
@@ -58,10 +40,8 @@ app.post('/webhook', (req, res) => {
       if (webhook_event.message) {
         handleMessage(sender_psid, webhook_event.message);        
       } else if (webhook_event.postback) {
-        
         handlePostback(sender_psid, webhook_event.postback);
       }
-      
     });
     // Return a '200 OK' response to all events
     res.status(200).send('EVENT_RECEIVED');
@@ -107,28 +87,15 @@ function handleMessage(sender_psid, received_message) {
   // Checks if the message contains text
   if (received_message.text) {
     var inputText = received_message.text;
-
-    // TODO: if text contains 'suicide' / 'kill myself' respond with crisis hotline number
-      var comprehend = new AWS.Comprehend();
-      var params = {
-          LanguageCode: en | fr , /* required */
-          Text: inputText /* required */
-      };
-      comprehend.detectKeyPhrases(params, function (err, data) {
-        //var args = process.argv.slice(2);
-          if (err) console.log(err, err.stack); // an error occurred
-          else  {
-              if (!data) return;
-              data.KeyPhrases[0].Text;
-              data.KeyPhrases[0].Score;
-              console.log(data);           // successful response
-          }
-      });
+    console.log(received_message.text)
+    const articleURL = algorithm.getMostRelevantArticle(inputText)
+    console.log(articleURL)
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
+      "text": `You may want to check this out ${articleURL}`
     }
+    console.log(response)
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
@@ -196,9 +163,12 @@ function callSendAPI(sender_psid, response) {
     "json": request_body
   }, (err, res, body) => {
     if (!err) {
+      console.log(body)
       console.log('message sent!')
     } else {
       console.error("Unable to send message:" + err);
     }
   }); 
 }
+
+
